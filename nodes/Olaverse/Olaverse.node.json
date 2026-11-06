@@ -1,0 +1,21 @@
+{
+	"node": "n8n-nodes-olaverse.olaverse",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": [
+		"Data & Storage",
+		"Productivity"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.olaverselab.com/get-started/quickstart/"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/Olaverse-Labs/n8n-nodes-olaverse#readme"
+			}
+		]
+	}
+}
