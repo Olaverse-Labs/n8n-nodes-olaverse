@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-olaverse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n node for Olaverse: document extraction with calibrated confidence, decisions, language ID in 608 languages and diacritics, built for English and African languages",
   "license": "MIT",
   "homepage": "https://docs.olaverselab.com",

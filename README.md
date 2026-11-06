@@ -39,6 +39,28 @@ then add an **Olaverse API** credential in n8n with that key. Testing the creden
 - **Restore Diacritics:** tone marks, accents and Arabic vowel marks back in Yorùbá, Igbo, Hausa, Arabic and 7 more.
 - **Generate Questions:** search-style questions a passage answers, in its own language (25 languages).
 
+## Example workflows
+
+**Receipts from email to a spreadsheet**
+
+1. **Gmail Trigger** (or **Email Trigger (IMAP)**): new emails with attachments, with *Download Attachments* on.
+2. **Olaverse** → Document → Extract: Input *Image (Binary)*, field `attachment_0`, template
+   `{"merchant": "verbatim-string", "date": "date", "total": "number", "currency": "verbatim-string"}`.
+3. **IF**: `{{ $json.confidence.total }}` is at least `0.95`.
+4. **Google Sheets** → Append row with `{{ $json.data.merchant }}`, `{{ $json.data.date }}`, `{{ $json.data.total }}`
+   on the true branch; a **Slack** message asking someone to check it on the false branch.
+
+**Support messages triaged by language and intent**
+
+1. **Webhook** (or your helpdesk's trigger): a new message.
+2. **Olaverse** → Text → Detect Language, on the message text.
+3. **Olaverse** → Text → Decide, with State `{{ $('Webhook').item.json.body.message }}` and questions
+   `{"refund": {"type": "noul", "instructions": "The customer is asking for money back."},
+     "team": {"type": "choice", "instructions": "Which team should handle this?",
+              "criteria": {"billing": "payments and refunds", "delivery": "orders in transit"}}}`.
+4. **Switch** on `{{ $json.answers.team.choice }}` to route the ticket; flag it as urgent when
+   `{{ $json.answers.refund.noul }}` is above `0.9`.
+
 ## Using the confidence
 
 Every extracted field comes with a confidence. A common pattern: an **IF** node after Olaverse that sends fields

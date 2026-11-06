@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Clearer message (with a hint) when a long document can't be extracted.
+- README: example workflows.
+
 ## 0.1.1
 
 - First published release (0.1.0 was tagged but not published: npm needs new packages marked public for provenance).

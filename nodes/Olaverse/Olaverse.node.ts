@@ -325,9 +325,15 @@ export class Olaverse implements INodeType {
 							if (response.status !== 'running') break;
 						}
 						if (response.status === 'failed') {
-							throw new NodeOperationError(this.getNode(), `The job failed: ${String(response.error)}`, {
-								itemIndex: i,
-							});
+							throw new NodeOperationError(
+								this.getNode(),
+								`The document couldn't be extracted: ${String(response.error)}`,
+								{
+									itemIndex: i,
+									description:
+										'Check the template and the text, or send the document in smaller sections. Long documents are split into parts; this one had none that could be extracted.',
+								},
+							);
 						}
 					} else {
 						response = await call('POST', '/v1/extract', body);
