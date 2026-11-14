@@ -1,8 +1,8 @@
 # n8n-nodes-olaverse
 
 An [n8n](https://n8n.io) community node for [Olaverse Lab](https://www.olaverselab.com): document extraction with
-calibrated confidence, decisions, language identification in 608 languages and diacritic restoration, built for
-English and African languages.
+calibrated confidence, decisions, language identification in 608 languages, diacritic restoration and question
+generation in 324 languages: multilingual, including the languages other tools skip.
 
 Turn receipts, invoices, mobile-money messages and forms into structured fields in your workflows (from an email
 attachment straight into a spreadsheet), triage support messages, and route text by language.
@@ -37,7 +37,8 @@ then add an **Olaverse API** credential in n8n with that key. Testing the creden
   probability for every answer. 19 languages, including English, Pidgin, Hausa, Yorùbá, Igbo, Swahili and Arabic.
 - **Detect Language:** the language of a text among 608, accurate on very short text.
 - **Restore Diacritics:** tone marks, accents and Arabic vowel marks back in Yorùbá, Igbo, Hausa, Arabic and 7 more.
-- **Generate Questions:** search-style questions a passage answers, in its own language (25 languages).
+- **Generate Questions:** the questions a passage answers, in 324 languages, in its own language or another (Question
+  Language); a set number from 1 to 5, or let the model decide how many.
 
 ## Example workflows
 

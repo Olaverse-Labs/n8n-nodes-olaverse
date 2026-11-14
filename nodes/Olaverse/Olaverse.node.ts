@@ -38,7 +38,7 @@ export class Olaverse implements INodeType {
 		version: [1],
 		subtitle: '={{$parameter["operation"]}}',
 		description:
-			'Document extraction with calibrated confidence, decisions, language ID in 608 languages and diacritics, built for English and African languages',
+			'Document extraction with calibrated confidence, decisions, language ID in 608 languages, diacritics and question generation in 324 languages',
 		defaults: {
 			name: 'Olaverse',
 		},
@@ -103,7 +103,7 @@ export class Olaverse implements INodeType {
 					{
 						name: 'Generate Questions',
 						value: 'generateQuestions',
-						description: 'Write search-style questions a passage answers, in its own language',
+						description: 'Write the questions a passage answers, in its own language or another (324 languages)',
 						action: 'Generate questions from a passage',
 					},
 					{
@@ -251,11 +251,30 @@ export class Olaverse implements INodeType {
 				displayOptions: { show: { resource: ['text'], operation: ['restoreDiacritics'] } },
 			},
 			{
+				displayName: 'Let the Model Decide How Many',
+				name: 'autoCount',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to let the model write as many questions as the passage supports, instead of a set number',
+				displayOptions: { show: { resource: ['text'], operation: ['generateQuestions'] } },
+			},
+			{
 				displayName: 'Number of Questions',
 				name: 'n',
 				type: 'number',
-				typeOptions: { minValue: 1, maxValue: 10 },
+				typeOptions: { minValue: 1, maxValue: 5 },
 				default: 3,
+				description: 'In the passage’s own language this is a maximum; across languages you get exactly this many',
+				displayOptions: { show: { resource: ['text'], operation: ['generateQuestions'], autoCount: [false] } },
+			},
+			{
+				displayName: 'Question Language',
+				name: 'questionLanguage',
+				type: 'string',
+				default: '',
+				placeholder: 'e.g. English, French, Swahili',
+				description:
+					'Leave empty for the passage’s own language. English or French work for any passage; Spanish, Hindi, Chinese, Swahili, Yoruba, Amharic and 24 more work from an English or French passage.',
 				displayOptions: { show: { resource: ['text'], operation: ['generateQuestions'] } },
 			},
 		],
@@ -361,9 +380,13 @@ export class Olaverse implements INodeType {
 						language: this.getNodeParameter('language', i) as string,
 					});
 				} else if (resource === 'text' && operation === 'generateQuestions') {
+					const questionLanguage = (this.getNodeParameter('questionLanguage', i, '') as string).trim();
 					response = await call('POST', '/v1/questions/generate', {
 						passage: this.getNodeParameter('text', i) as string,
-						n: this.getNodeParameter('n', i) as number,
+						n: this.getNodeParameter('autoCount', i, false)
+							? 'auto'
+							: (this.getNodeParameter('n', i) as number),
+						...(questionLanguage ? { question_language: questionLanguage } : {}),
 					});
 				} else {
 					throw new NodeOperationError(this.getNode(), `Unknown operation ${resource}/${operation}`, {
